@@ -1,0 +1,49 @@
+import random
+from datetime import datetime
+
+def gen_files(file_bytes, num_files, words):
+    if file_bytes == (2048*100):
+        size = "200KB"
+    elif file_bytes == (2*1024*1024):
+        size = "2MB"
+    elif file_bytes == (100*1024*1024):
+        size = "100MB"
+    elif file_bytes == (2*1024*1024*1024):
+        size = "2GB"
+
+    now = datetime.now()
+    timestamp = now.strftime("%Y-%m-%d_%H%M")
+
+    for i in range(num_files):
+        temp = ""
+        string_size = 0
+        while (string_size < file_bytes):
+            selected = random.choice(words)
+            temp += selected + " "
+            string_size += len(selected) + 1
+            print(string_size, file_bytes)
+        
+        # write from in memory object to file
+        final_filename = size + "_" + str(i) + "_" + timestamp  # example: filename = 200KB_1
+        with open(final_filename,'w') as final_file:
+            final_file.write(temp)
+
+
+def main():
+    with open('C:/temp/English_words.txt','r') as source_file:
+        words = source_file.read().splitlines()
+            
+        # 100 x 200 KB - PDFs
+        gen_files(2048*100, 100, words)
+
+        # 100 x 2 MB - photos taken on phone
+        #gen_files((2*1024*1024), 100, words)
+
+        # 25 x 100 MB - short videos taken on phone
+        #gen_files((100*1024*1024), 25, words)
+        
+        # 1 x 2 GB - HD movies
+        #gen_files((2*1024*1024*1024), 1, words)
+
+if __name__ == "__main__":
+    main() 
