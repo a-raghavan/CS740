@@ -43,11 +43,10 @@ if __name__ == '__main__':
     now = datetime.now() # current date and time
     timestamp = now.strftime("%m-%d-%Y_%H%M%S")
     save_file = "Dropbox_Download_" + file_size + "_" + timestamp + ".pcapng"
-    p = subprocess.Popen(["/mnt/c/Program Files/Wireshark/tshark.exe", "-i", "Wi-Fi", "-w", save_file]) 
+    p = subprocess.Popen([r"/mnt/c/Program Files/Wireshark/tshark.exe", "-i", "Wi-Fi", "-w", save_file]) 
     sleep(5)
     download_files(dbx, path_list)
     sleep(5)
     p.send_signal(signal.SIGINT)
-    p.terminate()
-    sleep(5)
+    p.wait()
     
