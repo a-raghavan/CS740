@@ -7,13 +7,14 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-from googleapiclient.http import MediaFileUpload
+from googleapiclient.http import MediaIoBaseDownload
 
 import subprocess
 from time import sleep
 import signal
 from datetime import datetime, timezone
 from pathlib import Path
+import io
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/drive']
@@ -43,35 +44,37 @@ def main():
 
     try:
         service = build('drive', 'v3', credentials=creds)
-        
-
-        # expts
-        directory = Path("../dataset/Expt1/200KB_expt/200KB_expt_1/").glob('*')
+        results = service.files().list(
+            q="'19inVWXczgkmKNYnPOQ9WhtsEf2kRbfF3' in parents", pageSize=10, fields="nextPageToken, files(id, name)").execute()
+        items = results.get('files', [])
+        if not items:
+            print('No files found.')
+            return
         i = 0
-        for file in directory:
-            if i == 10:
-                break
-            p = subprocess.Popen(["/Applications/Wireshark.app/Contents/MacOS/tshark", "-i", "en0", "-w", "200KB_single_file_upload_" +str(i)+".pcapng"])
+        for item in items:
+            p = subprocess.Popen(["/Applications/Wireshark.app/Contents/MacOS/tshark", "-i", "en0", "-w", "200KB_single_file_download_" +str(i)+".pcapng"])
             sleep(5)
-            
-            # multiple files in an expt
             print('start time #' + str(i) + str(datetime.now(timezone.utc)))
-            filename = str(file)
-            file_metadata = {'name': os.path.basename(filename)}
-            media = MediaFileUpload(filename, mimetype='application/octet-stream')
-            file = service.files().create(body=file_metadata, media_body=media,
-                                      fields='id').execute()
+
+            file_id = item['id']
+            request = service.files().get_media(fileId=file_id)
+            file = io.BytesIO()
+            downloader = MediaIoBaseDownload(file, request)
+            done = False
+            while done is False:
+                status, done = downloader.next_chunk()
+                print(F'Download {int(status.progress() * 100)}.')
             
+            with open(item['name'], "wb") as f:
+                f.write(file.getbuffer())
+
             print('end time #' + str(i) + str(datetime.now(timezone.utc)))
-            print(F'File ID: {file.get("id")}')
-            
             sleep(5)
             p.send_signal(signal.SIGINT)
             p.terminate()
             i += 1
 
     except HttpError as error:
-        # TODO(developer) - Handle errors from drive API.
         file = None
         print(f'An error occurred: {error}')
 
