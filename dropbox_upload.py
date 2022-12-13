@@ -13,6 +13,10 @@ import os
 import subprocess
 from time import sleep
 import signal
+from datetime import datetime
+
+staging_directory = "/home/dsmith7789/University_of_Wisconsin/staging_directory/"
+capture_directory = "/home/dsmith7789/University_of_Wisconsin/capture_directory/"
 
 class TransferData:
     def __init__(self, access_token):
@@ -24,13 +28,12 @@ class TransferData:
         dbx = dropbox.Dropbox(self.access_token)
 
         with open(file_from, 'rb') as f:
+            print("Uploading " + str(file_from) + " ...")
             dbx.files_upload(f.read(), file_to, mode=dropbox.files.WriteMode.overwrite)
+            print("Upload complete!")
 
 def main():
-    staging_directory = sys.argv[1]
-
-    #access_token = 'sl.BUMEirroBypSv1afRshqA7Y8BkeE3Eh_q1RvYwqDIWdDk8MCpo-No98PG-Izpu0d2D204yM7WUfJ60ZizbyQLs6LcrK1HiAwdtePMApCfnsARgz8OhCVRM_2usu3-trmUv2A-eo'
-    access_token = 'sl.BUhDbJSi60zpxyRq9V_Hr0bY1DcCB0FGrP1WvKL71BIEEI4U-ayVdf6qMZ3hByvE4C-PPL3_bjc6IFTnYsqLrPbB25ZB8HFYkapJYCkR7-z7mI1HTzraOrNA11pcGVMfbaGjEak'
+    access_token = 'sl.BU1JPmke6BnyIZ7BvARuuDx_U6OaHDUREG23LhOOjoQU-ZJO0wHdTc_aQ6Lf2pnNhncBPSfY1N4XhGCa66sE-X802KmFzAWmdoFBXHAKtyC80sIwO7nGLQ-o-WwIYxDRgOcd_9o'
     transferData = TransferData(access_token)
 
     for filename in os.listdir(staging_directory):
@@ -39,18 +42,15 @@ def main():
         transferData.upload_file(file_from, file_to)
 
 if __name__ == '__main__':
-    num_args = len(sys.argv)
-    if (num_args != 4):
-        print("Error: Incorrect arguments. Usage: python dropbox_upload.py [staging directory] [iterations] [prefix]")
-        exit()
-    iterations = int(sys.argv[2])
-    prefix = sys.argv[3]
-    #iterations = 3 # for debug purpose only
-    for i in range(iterations):
-        save_file = prefix + "_" + str(i) + ".pcapng"
-        p = subprocess.Popen([r"C:\Program Files\Wireshark\tshark.exe", "-i", "Wi-Fi", "-w", save_file], creationflags=subprocess.CREATE_NEW_PROCESS_GROUP) 
-        sleep(5)
-        main()
-        sleep(5)
-        p.send_signal(signal.CTRL_C_EVENT)
-        p.terminate()
+    file_size = sys.argv[1]
+    now = datetime.now() # current date and time
+    timestamp = now.strftime("%m-%d-%Y_%H%M%S")
+    save_file = capture_directory + "Dropbox_Upload_" + file_size + "_" + timestamp + ".pcapng"
+    print("Opening Wireshark...")
+    p = subprocess.Popen([r"/mnt/c/Program Files/Wireshark/tshark.exe", "-i", "Wi-Fi", "-w", save_file])
+    sleep(5)
+    main()
+    sleep(5)
+    print("Closing Wireshark.")
+    p.send_signal(signal.SIGINT)
+    p.wait()
