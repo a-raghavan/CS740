@@ -33,7 +33,7 @@ class TransferData:
             print("Upload complete!")
 
 def main():
-    access_token = 'sl.BU1JPmke6BnyIZ7BvARuuDx_U6OaHDUREG23LhOOjoQU-ZJO0wHdTc_aQ6Lf2pnNhncBPSfY1N4XhGCa66sE-X802KmFzAWmdoFBXHAKtyC80sIwO7nGLQ-o-WwIYxDRgOcd_9o'
+    access_token = 'sl.BU9Qftina-182R42W8aMi9xe182i93VuorqI5uOcPq6bbVUpRf7y1KZyUF0TASIlYoE9xl0lKVg9mkBfaEY0196Ln7lkERfAwnITkhCxqS6gno9qAx3FOWnImAM_Y859PIpW_Qs'
     transferData = TransferData(access_token)
 
     for filename in os.listdir(staging_directory):
@@ -43,6 +43,7 @@ def main():
 
 if __name__ == '__main__':
     file_size = sys.argv[1]
+    #file_size = "200KB"
     now = datetime.now() # current date and time
     timestamp = now.strftime("%m-%d-%Y_%H%M%S")
     save_file = capture_directory + "Dropbox_Upload_" + file_size + "_" + timestamp + ".pcapng"

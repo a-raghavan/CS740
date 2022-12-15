@@ -1,6 +1,8 @@
 import random
 from datetime import datetime
 
+staging_directory = "/home/dsmith7789/University_of_Wisconsin/staging_directory/"
+
 def gen_files(file_bytes, num_files, words):
     if file_bytes == (2048*100):
         size = "200KB"
@@ -24,13 +26,13 @@ def gen_files(file_bytes, num_files, words):
             print(string_size, file_bytes)
         
         # write from in memory object to file
-        final_filename = size + "_" + str(i) + "_" + timestamp  # example: filename = 200KB_1
+        final_filename = staging_directory + size + "_" + str(i) + "_" + timestamp  # example: filename = 200KB_1
         with open(final_filename,'w') as final_file:
             final_file.write(temp)
 
 
 def main():
-    with open('C:/temp/English_words.txt','r') as source_file:
+    with open('/home/dsmith7789/University_of_Wisconsin/English_words.txt','r') as source_file:
         words = source_file.read().splitlines()
             
         # 100 x 200 KB - PDFs

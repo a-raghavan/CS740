@@ -10,7 +10,7 @@ from time import sleep
 import signal
 from datetime import datetime
 
-access_token = 'sl.BU2sPjX_IzatfLUv3_4kp_cV2_X8-I_TqPzy_Unu_WU_mh708MzwfGsVUiylYI6R00_iOvtrnzVMykVvGEnPjwbdv9gGfJ9_HegGErFpH_j6KfNoYcRP-4CSLvjxkUEA-yD99BA'
+access_token = 'sl.BU9Qftina-182R42W8aMi9xe182i93VuorqI5uOcPq6bbVUpRf7y1KZyUF0TASIlYoE9xl0lKVg9mkBfaEY0196Ln7lkERfAwnITkhCxqS6gno9qAx3FOWnImAM_Y859PIpW_Qs'
 main_path = '/test_dropbox/new_test' # ENTER PATH HERE, starting after home /Dropbox/ directory
 staging_directory = "/home/dsmith7789/University_of_Wisconsin/staging_directory/"
 capture_directory = "/home/dsmith7789/University_of_Wisconsin/capture_directory/"
