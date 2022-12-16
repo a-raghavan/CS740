@@ -13,7 +13,7 @@ import sys
 import os
 
 def main():
-    access_token = 'sl.BU9Qftina-182R42W8aMi9xe182i93VuorqI5uOcPq6bbVUpRf7y1KZyUF0TASIlYoE9xl0lKVg9mkBfaEY0196Ln7lkERfAwnITkhCxqS6gno9qAx3FOWnImAM_Y859PIpW_Qs'
+    access_token = sys.argv[1]
     path = '/test_dropbox/new_test' # ENTER PATH HERE, starting after home /Dropbox/ directory
     dbx = dropbox.Dropbox(access_token)
     dbx.files_delete(path)
