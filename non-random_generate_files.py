@@ -10,8 +10,12 @@ def gen_files(file_bytes, num_files, words):
         size = "2MB"
     elif file_bytes == (100*1024*1024):
         size = "100MB"
+    elif file_bytes == (500*1024*1024):
+        size = "500MB"
     elif file_bytes == (2*1024*1024*1024):
         size = "2GB"
+    else:
+        size = "unspecified"
 
     now = datetime.now()
     timestamp = now.strftime("%Y-%m-%d_%H%M")
@@ -36,16 +40,16 @@ def main():
         words = source_file.read().splitlines()
             
         # 100 x 200 KB - PDFs
-        gen_files(2048*100, 100, words)
+        #gen_files(2048*100, 100, words)
 
         # 100 x 2 MB - photos taken on phone
         #gen_files((2*1024*1024), 100, words)
 
-        # 25 x 100 MB - short videos taken on phone
-        #gen_files((100*1024*1024), 25, words)
+        # 1 x 500 MB - for comparison of random vs words
+        gen_files((500*1024*1024), 1, words)
         
         # 1 x 2 GB - HD movies
-        #gen_files((2*1024*1024*1024), 1, words)
+        gen_files((2*1024*1024*1024), 1, words)
 
 if __name__ == "__main__":
     main() 
